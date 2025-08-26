@@ -1,128 +1,230 @@
-/* General Styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* General */
+* {
     margin: 0;
     padding: 0;
-    background: #f0f4f9;
-    color: #333;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
   }
   
-  /* Header */
+  body {
+    background: #f5f6fa;
+    color: #2f3640;
+    transition: background 0.3s, color 0.3s;
+  }
+  
   header {
-    background: linear-gradient(135deg, #4e73df, #224abe);
+    background: #40739e;
     color: white;
-    padding: 20px;
+    padding: 1rem;
     text-align: center;
-    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
-  }
-  
-  header h1 {
-    margin: 0 0 10px 0;
-  }
-  
-  header input, header select {
-    padding: 10px;
-    margin: 5px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-  }
-  
-  /* Input Section */
-  .task-input {
-    display: flex;
-    gap: 10px;
-    padding: 20px;
-    background: white;
-    justify-content: center;
-    flex-wrap: wrap;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
-    margin: 20px;
-    border-radius: 10px;
-  }
-  
-  .task-input input, 
-  .task-input select, 
-  .task-input button {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-  
-  .task-input button {
-    background: #4e73df;
-    color: white;
-    cursor: pointer;
-    border: none;
-    transition: 0.3s;
-  }
-  
-  .task-input button:hover {
-    background: #2e59d9;
-    transform: scale(1.05);
-  }
-  
-  /* Task List */
-  .task-list {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-  }
-  
-  .task-list ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .task {
-    background: white;
-    margin: 12px 0;
-    padding: 15px;
-    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
-    transition: 0.3s;
   }
   
-  .task:hover {
-    transform: scale(1.02);
+  header h1 {
+    font-size: 1.5rem;
   }
   
-  .task.high { border-left: 6px solid red; }
-  .task.medium { border-left: 6px solid orange; }
-  .task.low { border-left: 6px solid green; }
-  .task.done { 
-    background: #e0f7e9; 
-    text-decoration: line-through; 
-    color: gray; 
-    border-left: 6px solid #1cc88a;
-  }
-  
-  .task span {
-    font-size: 14px;
-    display: block;
-    margin-top: 5px;
-    color: #555;
-  }
-  
-  /* Buttons */
-  .task button {
-    margin-left: 6px;
-    padding: 8px 12px;
+  header button {
+    background: #273c75;
+    color: white;
     border: none;
+    padding: 0.5rem 1rem;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 13px;
-    transition: 0.3s;
   }
   
-  .task .delete { background: #e74a3b; color: white; }
-  .task .delete:hover { background: #c0392b; }
-  .task .edit { background: #f6c23e; color: white; }
-  .task .edit:hover { background: #dda20a; }
-  .task .done-btn { background: #1cc88a; color: white; }
-  .task .done-btn:hover { background: #17a673; }
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    background: #dcdde1;
+    padding: 0.5rem;
+  }
+  
+  .tab-btn {
+    border: none;
+    background: #718093;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .tab-btn.active {
+    background: #40739e;
+  }
+  
+  main {
+    padding: 1.5rem;
+  }
+  
+  /* Task Section */
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  form input, form select, form button {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  form button {
+    background: #44bd32;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background: #27ae60;
+  }
+  
+  #taskList {
+    list-style: none;
+    margin-top: 1rem;
+  }
+  
+  .task-item {
+    background: #f1f2f6;
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .task-item.done {
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+  
+  .task-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .task-meta {
+    font-size: 0.8rem;
+    color: #718093;
+  }
+  
+  .task-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+  
+  /* Progress Bar */
+  .progress-container {
+    margin: 1rem 0;
+  }
+  
+  .progress-bar {
+    background: #dcdde1;
+    border-radius: 8px;
+    height: 10px;
+    width: 100%;
+  }
+  
+  .progress {
+    background: #44bd32;
+    height: 100%;
+    width: 0%;
+    border-radius: 8px;
+    transition: width 0.3s;
+  }
+  
+  /* Flashcards */
+  #flashcardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .flashcard {
+    background: #f1f2f6;
+    border-radius: 10px;
+    perspective: 1000px;
+    cursor: pointer;
+    height: 150px;
+  }
+  
+  .flash-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  
+  .flashcard.flip .flash-inner {
+    transform: rotateY(180deg);
+  }
+  
+  .flash-front, .flash-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  
+  .flash-front {
+    background: #40739e;
+    color: white;
+  }
+  
+  .flash-back {
+    background: #44bd32;
+    color: white;
+    transform: rotateY(180deg);
+  }
+  
+  /* Dark Mode */
+  body.dark {
+    background: #2f3640;
+    color: #f5f6fa;
+  }
+  
+  body.dark header {
+    background: #2c3e50;
+  }
+  
+  body.dark nav {
+    background: #353b48;
+  }
+  
+  body.dark .task-item {
+    background: #353b48;
+  }
+  
+  body.dark .flash-front {
+    background: #2c3e50;
+  }
+  
+  body.dark .flash-back {
+    background: #27ae60;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background: #dcdde1;
+    margin-top: 2rem;
+  }
   

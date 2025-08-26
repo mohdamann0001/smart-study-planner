@@ -1,104 +1,119 @@
-// Select elements
-const taskName = document.getElementById("taskName");
-const taskDate = document.getElementById("taskDate");
-const taskPriority = document.getElementById("taskPriority");
-const addTaskBtn = document.getElementById("addTaskBtn");
-const taskContainer = document.getElementById("taskContainer");
-const searchBar = document.getElementById("searchBar");
-const filterPriority = document.getElementById("filterPriority");
+// Tab Switching
+const tabs = document.querySelectorAll(".tab-btn");
+const contents = document.querySelectorAll(".tab-content");
 
-// Load tasks from localStorage
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-renderTasks();
-
-// Add Task
-addTaskBtn.addEventListener("click", () => {
-  if (taskName.value === "" || taskDate.value === "") {
-    alert("Please fill in all fields!");
-    return;
-  }
-
-  const newTask = {
-    id: Date.now(),
-    name: taskName.value,
-    date: taskDate.value,
-    priority: taskPriority.value,
-    done: false
-  };
-
-  tasks.push(newTask);
-  saveTasks();
-  renderTasks();
-
-  taskName.value = "";
-  taskDate.value = "";
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(t => t.classList.remove("active"));
+    contents.forEach(c => c.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.tab).classList.add("active");
+  });
 });
 
-// Render Tasks
+// Dark Mode
+const themeToggle = document.getElementById("themeToggle");
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  themeToggle.textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
+});
+
+// ------------------- Tasks -------------------
+const taskForm = document.getElementById("taskForm");
+const taskList = document.getElementById("taskList");
+const progressText = document.getElementById("progressText");
+const progressBar = document.querySelector(".progress");
+
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
 function renderTasks() {
-  taskContainer.innerHTML = "";
+  taskList.innerHTML = "";
+  let doneCount = 0;
 
-  let searchText = searchBar.value.toLowerCase();
-  let filter = filterPriority.value;
+  tasks.forEach((task, index) => {
+    if (task.done) doneCount++;
 
-  tasks
-    .filter(task => task.name.toLowerCase().includes(searchText))
-    .filter(task => filter === "All" || task.priority === filter)
-    .forEach(task => {
-      const li = document.createElement("li");
-      li.className = `task ${task.priority.toLowerCase()} ${task.done ? "done" : ""}`;
-      li.innerHTML = `
-        <div>
-          <strong>${task.name}</strong> <br>
-          <span>📅 ${task.date} | 🔔 ${task.priority}</span>
-        </div>
-        <div>
-          <button class="done-btn" onclick="toggleDone(${task.id})">${task.done ? "Undo" : "Done"}</button>
-          <button class="edit" onclick="editTask(${task.id})">Edit</button>
-          <button class="delete" onclick="deleteTask(${task.id})">Delete</button>
-        </div>
-      `;
-      taskContainer.appendChild(li);
+    const li = document.createElement("li");
+    li.classList.add("task-item");
+    if (task.done) li.classList.add("done");
 
-      // Alert if deadline is today
-      const today = new Date().toISOString().split("T")[0];
-      if (task.date === today && !task.done) {
-        console.log(`Reminder: Task "${task.name}" is due today!`);
-      }
-    });
-}
+    li.innerHTML = `
+      <div class="task-info">
+        <span>${task.text}</span>
+        <span class="task-meta">📂 ${task.category} | ⚡ ${task.priority} | ⏳ ${task.deadline || "No deadline"}</span>
+      </div>
+      <div class="task-actions">
+        <button onclick="toggleTask(${index})">✔️</button>
+        <button onclick="deleteTask(${index})">❌</button>
+      </div>
+    `;
 
-// Delete Task
-function deleteTask(id) {
-  tasks = tasks.filter(task => task.id !== id);
-  saveTasks();
-  renderTasks();
-}
-
-// Edit Task
-function editTask(id) {
-  const task = tasks.find(t => t.id === id);
-  taskName.value = task.name;
-  taskDate.value = task.date;
-  taskPriority.value = task.priority;
-  deleteTask(id);
-}
-
-// Toggle Done
-function toggleDone(id) {
-  tasks = tasks.map(task => {
-    if (task.id === id) task.done = !task.done;
-    return task;
+    taskList.appendChild(li);
   });
-  saveTasks();
-  renderTasks();
-}
 
-// Save to LocalStorage
-function saveTasks() {
+  let percent = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
+  progressText.textContent = `Progress: ${percent}%`;
+  progressBar.style.width = percent + "%";
+
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// Search + Filter Events
-searchBar.addEventListener("input", renderTasks);
-filterPriority.addEventListener("change", renderTasks);
+taskForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const text = document.getElementById("taskInput").value;
+  const category = document.getElementById("category").value;
+  const priority = document.getElementById("priority").value;
+  const deadline = document.getElementById("deadline").value;
+
+  tasks.push({ text, category, priority, deadline, done: false });
+  taskForm.reset();
+  renderTasks();
+});
+
+function toggleTask(i) {
+  tasks[i].done = !tasks[i].done;
+  renderTasks();
+}
+
+function deleteTask(i) {
+  tasks.splice(i, 1);
+  renderTasks();
+}
+
+renderTasks();
+
+// ------------------- Flashcards -------------------
+const flashForm = document.getElementById("flashForm");
+const flashGrid = document.getElementById("flashcardGrid");
+
+let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
+
+function renderFlashcards() {
+  flashGrid.innerHTML = "";
+  flashcards.forEach((card, index) => {
+    const div = document.createElement("div");
+    div.classList.add("flashcard");
+    div.innerHTML = `
+      <div class="flash-inner">
+        <div class="flash-front">${card.question}</div>
+        <div class="flash-back">${card.answer}</div>
+      </div>
+    `;
+    div.addEventListener("click", () => div.classList.toggle("flip"));
+    flashGrid.appendChild(div);
+  });
+
+  localStorage.setItem("flashcards", JSON.stringify(flashcards));
+}
+
+flashForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const question = document.getElementById("questionInput").value;
+  const answer = document.getElementById("answerInput").value;
+
+  flashcards.push({ question, answer });
+  flashForm.reset();
+  renderFlashcards();
+});
+
+renderFlashcards();

@@ -7,35 +7,61 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header -->
   <header>
-    <h1>📚 Smart Study Planner</h1>
-    <input type="text" id="searchBar" placeholder="🔍 Search tasks...">
-    <select id="filterPriority">
-      <option value="All">All</option>
-      <option value="High">High</option>
-      <option value="Medium">Medium</option>
-      <option value="Low">Low</option>
-    </select>
+    <h1>📘 Smart Study Planner</h1>
+    <button id="themeToggle">🌙 Dark Mode</button>
   </header>
 
-  <!-- Task Input Form -->
-  <section class="task-input">
-    <input type="text" id="taskName" placeholder="Enter Task...">
-    <input type="date" id="taskDate">
-    <select id="taskPriority">
-      <option value="High">High Priority</option>
-      <option value="Medium">Medium Priority</option>
-      <option value="Low">Low Priority</option>
-    </select>
-    <button id="addTaskBtn">➕ Add Task</button>
-  </section>
+  <nav>
+    <button class="tab-btn active" data-tab="tasks">📝 Tasks</button>
+    <button class="tab-btn" data-tab="flashcards">📚 Flashcards</button>
+  </nav>
 
-  <!-- Task List -->
-  <section class="task-list">
-    <h2>Your Tasks</h2>
-    <ul id="taskContainer"></ul>
-  </section>
+  <main>
+    <!-- Tasks Section -->
+    <section id="tasks" class="tab-content active">
+      <h2>Manage Your Tasks</h2>
+      <form id="taskForm">
+        <input type="text" id="taskInput" placeholder="Enter task..." required>
+        <select id="category">
+          <option value="General">General</option>
+          <option value="Math">Math</option>
+          <option value="Science">Science</option>
+          <option value="Programming">Programming</option>
+        </select>
+        <select id="priority">
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <input type="date" id="deadline">
+        <button type="submit">➕ Add Task</button>
+      </form>
+      
+      <div class="progress-container">
+        <p id="progressText">Progress: 0%</p>
+        <div class="progress-bar"><div class="progress"></div></div>
+      </div>
+
+      <ul id="taskList"></ul>
+    </section>
+
+    <!-- Flashcards Section -->
+    <section id="flashcards" class="tab-content">
+      <h2>Create Flashcards</h2>
+      <form id="flashForm">
+        <input type="text" id="questionInput" placeholder="Enter question..." required>
+        <input type="text" id="answerInput" placeholder="Enter answer..." required>
+        <button type="submit">➕ Add Flashcard</button>
+      </form>
+
+      <div id="flashcardGrid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Made with ❤️ for Learning | Smart Study Planner</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
