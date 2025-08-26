@@ -1,67 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Study Planner</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Study Planner — Red & Black</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>📘 Smart Study Planner</h1>
-    <button id="themeToggle">🌙 Dark Mode</button>
+  <header class="site-header">
+    <div class="brand">🔥 Smart Study Planner</div>
+    <div class="subtitle">Red • Black • Focus</div>
   </header>
 
-  <nav>
+  <nav class="tabs">
     <button class="tab-btn active" data-tab="tasks">📝 Tasks</button>
     <button class="tab-btn" data-tab="flashcards">📚 Flashcards</button>
   </nav>
 
-  <main>
-    <!-- Tasks Section -->
+  <main class="container">
+    <!-- TASKS -->
     <section id="tasks" class="tab-content active">
-      <h2>Manage Your Tasks</h2>
-      <form id="taskForm">
-        <input type="text" id="taskInput" placeholder="Enter task..." required>
-        <select id="category">
+      <h2>Tasks</h2>
+
+      <form id="taskForm" class="card form">
+        <input id="taskInput" type="text" placeholder="Task title (required)" required />
+        <input id="deadline" type="date" />
+        <select id="taskCategory">
           <option value="General">General</option>
           <option value="Math">Math</option>
           <option value="Science">Science</option>
           <option value="Programming">Programming</option>
         </select>
-        <select id="priority">
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
+        <select id="taskPriority">
+          <option value="High">🔴 High</option>
+          <option value="Medium">🟡 Medium</option>
+          <option value="Low">🟢 Low</option>
         </select>
-        <input type="date" id="deadline">
-        <button type="submit">➕ Add Task</button>
+        <div class="row">
+          <button class="btn primary" type="submit">➕ Add Task</button>
+          <button class="btn ghost" id="clearCompleted" type="button">🧹 Clear Completed</button>
+        </div>
       </form>
-      
-      <div class="progress-container">
-        <p id="progressText">Progress: 0%</p>
-        <div class="progress-bar"><div class="progress"></div></div>
+
+      <div class="card controls">
+        <input id="searchTask" type="search" placeholder="🔍 Search tasks..." />
+        <select id="filterCategory">
+          <option value="All">All categories</option>
+          <option value="General">General</option>
+          <option value="Math">Math</option>
+          <option value="Science">Science</option>
+          <option value="Programming">Programming</option>
+        </select>
+        <select id="sortBy">
+          <option value="none">Sort: —</option>
+          <option value="deadline">By deadline (earliest)</option>
+          <option value="priority">By priority (High → Low)</option>
+        </select>
       </div>
 
-      <ul id="taskList"></ul>
+      <div class="card progress">
+        <div class="progress-row">
+          <div id="progressText">Progress: 0%</div>
+          <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        </div>
+      </div>
+
+      <ul id="taskList" class="list"></ul>
     </section>
 
-    <!-- Flashcards Section -->
+    <!-- FLASHCARDS -->
     <section id="flashcards" class="tab-content">
-      <h2>Create Flashcards</h2>
-      <form id="flashForm">
-        <input type="text" id="questionInput" placeholder="Enter question..." required>
-        <input type="text" id="answerInput" placeholder="Enter answer..." required>
-        <button type="submit">➕ Add Flashcard</button>
+      <h2>Flashcards</h2>
+
+      <form id="flashForm" class="card form">
+        <input id="questionInput" type="text" placeholder="Question (required)" required />
+        <input id="answerInput" type="text" placeholder="Answer (required)" required />
+        <select id="flashCategory">
+          <option value="General">General</option>
+          <option value="Math">Math</option>
+          <option value="Science">Science</option>
+          <option value="Programming">Programming</option>
+        </select>
+        <div class="row">
+          <button class="btn primary" type="submit">➕ Add Flashcard</button>
+          <button class="btn ghost" id="exportFlash" type="button">⬇️ Export JSON</button>
+        </div>
       </form>
 
-      <div id="flashcardGrid"></div>
+      <div class="card controls">
+        <button class="btn" id="openStudyMode">▶️ Open Study Mode</button>
+        <button class="btn" id="shuffleFlash">🔀 Shuffle Deck</button>
+        <select id="filterFlashCategory">
+          <option value="All">All categories</option>
+          <option value="General">General</option>
+          <option value="Math">Math</option>
+          <option value="Science">Science</option>
+          <option value="Programming">Programming</option>
+        </select>
+      </div>
+
+      <div id="flashcardGrid" class="grid"></div>
     </section>
   </main>
 
-  <footer>
-    <p>Made with ❤️ for Learning | Smart Study Planner</p>
+  <footer class="site-footer">
+    <small>Made with ❤️ for Learning — Smart Study Planner</small>
   </footer>
+
+  <!-- STUDY MODE MODAL -->
+  <div id="studyModal" class="modal" aria-hidden="true">
+    <div class="modal-inner card">
+      <button id="closeModal" class="close" title="Close">✕</button>
+      <header class="modal-header">
+        <h3>Study Mode</h3>
+        <div class="modal-controls">
+          <button id="modalShuffle" class="btn">🔀 Shuffle</button>
+          <button id="modalToggleShow" class="btn">🔄 Show Answer</button>
+        </div>
+      </header>
+
+      <main class="study-area">
+        <div id="studyCounter" class="muted">0 / 0</div>
+        <article id="studyCard" class="study-card">No flashcards yet</article>
+
+        <div class="study-buttons">
+          <button id="prevCard" class="btn">⬅ Prev</button>
+          <button id="flipCard" class="btn">🔁 Flip</button>
+          <button id="nextCard" class="btn">Next ➡</button>
+        </div>
+
+        <div class="study-actions">
+          <button id="markKnown" class="btn primary">✅ I Got It</button>
+          <button id="markReview" class="btn ghost">❌ Review Again</button>
+          <button id="deleteCurrent" class="btn danger">🗑️ Delete</button>
+        </div>
+      </main>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
